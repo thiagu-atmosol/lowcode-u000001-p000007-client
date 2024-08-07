@@ -81,19 +81,20 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     postContentDiv = document.querySelector('#contact-submitBtn');
     postContentDiv.addEventListener('click', function() {
-        contact(event, 'sectionID');
+        contact(event);
     });
 });
 
-function contact(event, id) {
-    event.preventDefault();
-    console.log(id, "this is the id of form passed!!!");
+// Contact Us section js
 
-    const form = document.getElementById(id);
-    const firstName = form.querySelector('#contact-firstName').value;
+function contact(event) {
+    event.preventDefault();
+    console.log("Contact us event trigger for send email.");
+
+    const firstName = document.getElementById('contact-firstName').value;
     const lastName = firstName.split(" ")[1];
-    const email = form.querySelector('#contact-email').value;
-    const message = form.querySelector('#contact-message').value;
+    const email = document.getElementById('contact-email').value;
+    const message = document.getElementById('contact-message').value;
 
     if ((firstName || lastName) && email && message) {
         console.log(firstName, "First Name");
@@ -106,16 +107,16 @@ function contact(event, id) {
             lastName,
             email,
             message
-        }, form);
+        });
     } else {
         displayMessage('Please fill in all fields.', 'error');
     }
 }
 
-function sendEmail(event, data, form) {
+function sendEmail(event, data) {
     event.preventDefault();
     const baseUrl = "http://localhost:5037/api";
-    const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJwcmF0aWtAeW9wbWFpbC5jb20iLCJpZCI6IjEiLCJleHAiOjE3MjMwMTMzNjV9.joIgCV9Fkof8nI1dIR4IEXCA0EJktnm3VghOvxS_P6Q";
+    const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJwcmF0aWtAeW9wbWFpbC5jb20iLCJpZCI6IjEiLCJleHAiOjE3MjMwMjQzNzN9.GSYIgfU9t8D2ek1vyfOJpcQKR_aCKBDQFb2NSWP7WRc";
     const userId = 1;
     const projectId = 7;
 
@@ -133,7 +134,7 @@ function sendEmail(event, data, form) {
     .then(response => {
         if (response.ok) { // Check if response is OK
             displayMessage('Email sent successfully!', 'success');
-            form.reset(); // Reset the form here
+            resetContactUsFields(); // Reset the form here
         } else {
             return response.json().then(data => {
                 displayMessage(data.error || 'An error occurred.', 'error');
@@ -158,4 +159,14 @@ function displayMessage(message, type) {
     setTimeout(() => {
         responseMessageDiv.textContent = '';
     }, 2000);
+}
+
+function resetContactUsFields(){
+	document.getElementById('contact-firstName').value = '';
+	document.getElementById('contact-phone').value = '';
+	document.getElementById('contact-email').value = '';
+    document.getElementById('contact-message').value = '';
+	const organisation = document.getElementById('contact-organization');
+	if(organisation != null)
+		organisation.value = '';
 }
